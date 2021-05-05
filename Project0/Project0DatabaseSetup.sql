@@ -17,18 +17,26 @@ create table if not exists items(
 	ite_id SERIAL primary key,
 	ite_name VARCHAR(100),
 	ite_description VARCHAR(600),
-	ite_estimated_val NUMERIC(10,2),
-	ite_remaining_bal NUMERIC(10,2),
-	ite_price NUMERIC(10,2),
+	ite_estimated_val NUMERIC(15,2),
+	ite_weekly_pay NUMERIC(15,2),
+	ite_price NUMERIC(15,2),
 	ite_remaining_payments INTEGER,
-	cust_id INTEGER references customers(cust_id)
+	cust_id INTEGER references customers(cust_id) on delete set null
 );
 
 create table if not exists offers(
 	off_id SERIAL primary key,
-	off_price NUMERIC(10,2),
-	ite_id INTEGER references items(ite_id),
-	cust_id INTEGER references customers(cust_id)
+	off_price NUMERIC(15,2),
+	off_num_weekly_payments INTEGER,
+	ite_id INTEGER references items(ite_id) on delete set null,
+	cust_id INTEGER references customers(cust_id) on delete set null
 );
 
-insert into offers (off_price, ite_id, cust_id) values (500.60, 2, 1);
+create table if not exists payments(
+	pay_id SERIAL primary key,
+	pay_time_stamp TIMESTAMP,
+	pay_value NUMERIC(15,2),
+	ite_id INTEGER references items(ite_id) on delete set null
+);
+
+insert into employees (empl_name, empl_user_name, empl_user_pass, empl_is_manager) values (Admin, admin, admin, TRUE);

@@ -4,6 +4,7 @@ import com.revature.daos.CustomerDao;
 import com.revature.daos.EmployeeDao;
 import com.revature.models.Customer;
 import com.revature.models.Employee;
+import com.revature.util.LoggerSingelton;
 import com.revature.util.ScannerSingleton;
 
 public class StartMenuBuilder {
@@ -52,7 +53,8 @@ public class StartMenuBuilder {
 		String name;
 		String userName;
 		String password;
-
+		Customer cust;
+		
 		System.out.print("Please enter Name: ");
 		name = ScannerSingleton.getScanner().nextLine();
 
@@ -61,9 +63,12 @@ public class StartMenuBuilder {
 
 		System.out.print("Please enter password: ");
 		password = ScannerSingleton.getScanner().nextLine();
-
-		CustomerDao.add(new Customer(name, userName, password));
-
+		
+		cust = new Customer(name, userName, password);
+		CustomerServices.registerCustomer(cust);
+		
+		LoggerSingelton.getLottger().info("New Customer Registration Name = " + name + " UserName = " + userName);
+		
 		StartMenuBuilder.startUpMenu();
 
 	}
@@ -82,11 +87,16 @@ public class StartMenuBuilder {
 
 		cust = CustomerDao.getByUsername(inputUserName);
 
+		LoggerSingelton.getLottger().info("Attempted Login " + inputUserName);
+		
 		if (cust != null) {
 			// Checks entered password and tests if it is the same as the one in the
 			// database
 			if (cust.getPassword().equals(inputPassword)) {
 				System.out.println("Password is correct!");
+				
+				LoggerSingelton.getLottger().info("Successful Login " + inputUserName);
+				
 				CustomerStartMenuBuilder.setLoggedInCustomer(cust);
 				CustomerStartMenuBuilder.startMenu();
 			} else {
@@ -113,12 +123,17 @@ public class StartMenuBuilder {
 		inputPassword = ScannerSingleton.getScanner().nextLine();
 
 		empl = EmployeeDao.getByUsername(inputUserName);
+		
+		LoggerSingelton.getLottger().info("Attempted Login " + inputUserName);
 
 		if (empl != null) {
 			// Checks entered password and tests if it is the same as the one in the
 			// database
 			if (empl.getPassword().equals(inputPassword)) {
 				System.out.println("Password is correct!");
+				
+				LoggerSingelton.getLottger().info("Successful Login " + inputUserName);
+				
 				EmployeeStartMenuBuilder.setLoggedInEmployee(empl);
 				EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 			} else {

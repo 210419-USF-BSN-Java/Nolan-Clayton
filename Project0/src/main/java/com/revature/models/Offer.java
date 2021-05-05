@@ -8,7 +8,7 @@ public class Offer {
 	private BigDecimal price;
 	private Integer iteId;
 	private Integer custId;
-	
+	private Integer numOfWeeklyPayments;
 	
 	
 	public Offer() {
@@ -16,22 +16,33 @@ public class Offer {
 
 	}
 	
-	public Offer(BigDecimal price, Integer iteId, Integer custId) {
+	public Offer(BigDecimal price, Integer iteId, Integer custId, Integer numOfWeeklyPayments) {
 		super();
 		this.price = price;
 		this.iteId = iteId;
 		this.custId = custId;
+		this.numOfWeeklyPayments = numOfWeeklyPayments;
 	}
 
-	public Offer(Integer id, BigDecimal price, Integer iteId, Integer custId) {
+	public Offer(Integer id, BigDecimal price, Integer iteId, Integer custId, Integer numOfWeeklyPayments) {
 		super();
 		this.id = id;
 		this.price = price;
 		this.iteId = iteId;
 		this.custId = custId;
+		this.numOfWeeklyPayments = numOfWeeklyPayments;
 	}
 
 	
+	
+	public Integer getNumOfWeeklyPayments() {
+		return numOfWeeklyPayments;
+	}
+
+	public void setNumOfWeeklyPayments(Integer numOfWeeklyPayments) {
+		this.numOfWeeklyPayments = numOfWeeklyPayments;
+	}
+
 	public Integer getId() {
 		return id;
 	}

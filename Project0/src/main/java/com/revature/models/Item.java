@@ -1,39 +1,57 @@
 package com.revature.models;
 
+import java.math.BigDecimal;
+
 public class Item {
 
 	private Integer id;
 	private String itemName;
 	private String itemDescription;
-	private Float itemEstimatedValue;
+	private BigDecimal itemEstimatedValue;
 	private Integer ownerId;
-	private Float remainingBalance;
-	private Float price;
+	private BigDecimal weeklyPay;
+	private BigDecimal price;
 	private Integer remainingPayments;
 
 	public Item() {
 		super();
 	}
 
-	public Item(String itemName, String itemDescription, Float itemEstimatedValue) {
+	public Item(Integer id, String itemName, String itemDescription, BigDecimal itemEstimatedValue) {
+
+		this.setId(id);
+		this.setItemName(itemName);
+		this.setItemDescription(itemDescription);
+		this.setItemEstimatedValue(itemEstimatedValue);
+		this.setOwnerId(null);
+		this.setweeklyPay(null);
+		this.setPrice(null);
+		this.setRemainingPayments(null);
+
+	}
+	
+	
+	public Item(String itemName, String itemDescription, BigDecimal itemEstimatedValue) {
 
 		this.setItemName(itemName);
 		this.setItemDescription(itemDescription);
 		this.setItemEstimatedValue(itemEstimatedValue);
 		this.setOwnerId(null);
-		this.setRemainingBalance(null);
+		this.setweeklyPay(null);
+		this.setPrice(null);
+		this.setRemainingPayments(null);
 
 	}
 
-	public Item(Integer id, String itemName, String itemDescription, Float itemEstimatedValue, Integer ownerId,
-			Float remainingBalance, Float price, Integer remainingPayments) {
+	public Item(Integer id, String itemName, String itemDescription, BigDecimal itemEstimatedValue, Integer ownerId,
+			BigDecimal weeklyPay, BigDecimal price, Integer remainingPayments) {
 
 		this.setId(id);
 		this.setItemName(itemName);
 		this.setItemDescription(itemDescription);
 		this.setItemEstimatedValue(itemEstimatedValue);
 		this.setOwnerId(ownerId);
-		this.setRemainingBalance(remainingBalance);
+		this.setweeklyPay(weeklyPay);
 		this.setPrice(price);
 		this.setRemainingPayments(remainingPayments);
 
@@ -63,11 +81,11 @@ public class Item {
 		this.itemDescription = itemDescription;
 	}
 
-	public Float getItemEstimatedValue() {
+	public BigDecimal getItemEstimatedValue() {
 		return itemEstimatedValue;
 	}
 
-	public void setItemEstimatedValue(Float itemEstimatedValue) {
+	public void setItemEstimatedValue(BigDecimal itemEstimatedValue) {
 		this.itemEstimatedValue = itemEstimatedValue;
 	}
 
@@ -79,19 +97,19 @@ public class Item {
 		this.ownerId = owner;
 	}
 
-	public Float getRemainingBalance() {
-		return remainingBalance;
+	public BigDecimal getweeklyPay() {
+		return weeklyPay;
 	}
 
-	public void setRemainingBalance(Float remainingBalance) {
-		this.remainingBalance = remainingBalance;
+	public void setweeklyPay(BigDecimal weeklyPay) {
+		this.weeklyPay = weeklyPay;
 	}
 
-	public Float getPrice() {
+	public BigDecimal getPrice() {
 		return price;
 	}
 
-	public void setPrice(Float price) {
+	public void setPrice(BigDecimal price) {
 		this.price = price;
 	}
 
