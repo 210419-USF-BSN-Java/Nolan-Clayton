@@ -53,7 +53,6 @@ public class StartMenuBuilder {
 		String name;
 		String userName;
 		String password;
-		Customer cust;
 		
 		System.out.print("Please enter Name: ");
 		name = ScannerSingleton.getScanner().nextLine();
@@ -64,10 +63,8 @@ public class StartMenuBuilder {
 		System.out.print("Please enter password: ");
 		password = ScannerSingleton.getScanner().nextLine();
 		
-		cust = new Customer(name, userName, password);
-		CustomerServices.registerCustomer(cust);
-		
-		LoggerSingelton.getLottger().info("New Customer Registration Name = " + name + " UserName = " + userName);
+		CustomerServices.registerCustomer(new Customer(name, userName, password));
+		System.out.println("Registration Successful!");
 		
 		StartMenuBuilder.startUpMenu();
 

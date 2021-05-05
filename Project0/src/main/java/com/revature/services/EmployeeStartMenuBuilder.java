@@ -1,9 +1,7 @@
 package com.revature.services;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.List;
-
 import com.revature.daos.EmployeeDao;
 import com.revature.daos.ItemDao;
 import com.revature.daos.OfferDao;
@@ -17,16 +15,22 @@ import com.revature.util.ScannerSingleton;
 
 public class EmployeeStartMenuBuilder {
 
+	// Employee session
 	private static Employee loggedInEmployee;
 
-	// Used to know which employee is currently logged in
+	public static Employee getLoggedInEmployee() {
+		return loggedInEmployee;
+	}
+
+	
 	public static void setLoggedInEmployee(Employee emp) {
 		loggedInEmployee = emp;
 	}
 
 	public static void startMenuEmployeeSelector() {
 
-		// Selects which menu to use the regular employee or the manager menu based on flag
+		// Selects which menu to use the regular employee or the manager menu based on
+		// flag
 		if (loggedInEmployee.getManFlag()) {
 			EmployeeStartMenuBuilder.startMenuManager();
 
@@ -62,35 +66,35 @@ public class EmployeeStartMenuBuilder {
 		switch (selection) {
 
 		case 1:
-			EmployeeStartMenuBuilder.listAllItems();
+			EmployeeStartMenuBuilder.listAllItemsMenu();
 			break;
 
 		case 2:
-			EmployeeStartMenuBuilder.addItem();
+			EmployeeStartMenuBuilder.addItemMenu();
 			break;
 
 		case 3:
-			EmployeeStartMenuBuilder.editItem();
+			EmployeeStartMenuBuilder.editItemMenu();
 			break;
 
 		case 4:
-			EmployeeStartMenuBuilder.deleteItem();
+			EmployeeStartMenuBuilder.deleteItemMenu();
 			break;
 
 		case 5:
-			EmployeeStartMenuBuilder.viewOffers();
+			EmployeeStartMenuBuilder.viewOffersMenu();
 			break;
 
 		case 6:
-			EmployeeStartMenuBuilder.acceptOffer();
+			EmployeeStartMenuBuilder.acceptOfferMenu();
 			break;
 
 		case 7:
-			EmployeeStartMenuBuilder.rejectOffer();
+			EmployeeStartMenuBuilder.rejectOfferMenu();
 			break;
 
 		case 8:
-			EmployeeStartMenuBuilder.viewAllPayments();
+			EmployeeStartMenuBuilder.viewAllPaymentsMenu();
 			break;
 
 		case 9:
@@ -130,39 +134,39 @@ public class EmployeeStartMenuBuilder {
 			switch (selection) {
 
 			case 1:
-				EmployeeStartMenuBuilder.listAllItems();
+				EmployeeStartMenuBuilder.listAllItemsMenu();
 				break;
 
 			case 2:
-				EmployeeStartMenuBuilder.addItem();
+				EmployeeStartMenuBuilder.addItemMenu();
 				break;
 
 			case 3:
-				EmployeeStartMenuBuilder.editItem();
+				EmployeeStartMenuBuilder.editItemMenu();
 				break;
 
 			case 4:
-				EmployeeStartMenuBuilder.deleteItem();
+				EmployeeStartMenuBuilder.deleteItemMenu();
 				break;
 
 			case 5:
-				EmployeeStartMenuBuilder.viewOffers();
+				EmployeeStartMenuBuilder.viewOffersMenu();
 				break;
 
 			case 6:
-				EmployeeStartMenuBuilder.acceptOffer();
+				EmployeeStartMenuBuilder.acceptOfferMenu();
 				break;
 
 			case 7:
-				EmployeeStartMenuBuilder.rejectOffer();
+				EmployeeStartMenuBuilder.rejectOfferMenu();
 				break;
 
 			case 8:
-				EmployeeStartMenuBuilder.viewAllPayments();
+				EmployeeStartMenuBuilder.viewAllPaymentsMenu();
 				break;
 
 			case 9:
-				EmployeeStartMenuBuilder.viewAllEmployees();
+				EmployeeStartMenuBuilder.viewAllEmployeesMenu();
 				break;
 
 			case 10:
@@ -170,7 +174,7 @@ public class EmployeeStartMenuBuilder {
 				break;
 
 			case 11:
-				EmployeeStartMenuBuilder.fireEmployee();
+				EmployeeStartMenuBuilder.fireEmployeeMenu();
 				break;
 
 			case 12:
@@ -186,7 +190,7 @@ public class EmployeeStartMenuBuilder {
 		}
 	}
 
-	public static void viewAllPayments() {
+	public static void viewAllPaymentsMenu() {
 
 		List<Payment> payments = PaymentDao.getAll();
 
@@ -199,39 +203,39 @@ public class EmployeeStartMenuBuilder {
 					+ pay.getItem().getOwnerId() + " Payment Value: " + pay.getPayValue());
 		}
 
-		
 		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " viewed all payments");
-		
+
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
-		
+
 	}
 
-	public static void fireEmployee() {
+	public static void fireEmployeeMenu() {
 		Integer id;
 
 		System.out.print("Enter Employee Id to fire: ");
 		id = Integer.parseInt(ScannerSingleton.getScanner().nextLine());
 
-		EmployeeDao.delete(id);
+		EmployeeServices.removeEmployee(id);
 
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " fired employee id = " + id);
-		
+		System.out.println("Employed Fired!");
+
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void viewAllEmployees() {
+	public static void viewAllEmployeesMenu() {
 		List<Employee> employees = EmployeeDao.getAll();
 
 		System.out.println("All Offers:");
+		// Loops though and prints out all employees retrieved
 		for (Employee emp : employees) {
 
 			System.out.println("Employee Id: " + emp.getId() + " Employee Name: " + emp.getName()
 					+ " Employee Username: " + emp.getUserName() + " Is a Manager: " + emp.getManFlag());
 		}
-		
+
 		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " viewed all employees ");
 
 		System.out.println();
@@ -266,61 +270,42 @@ public class EmployeeStartMenuBuilder {
 		}
 
 		EmployeeServices.createEmployee(new Employee(name, userName, password, manFlag));
-		
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " registred new employee Name = " + name + " UserName = " + userName + " is a manager = " + manFlag);
+
+		System.out.println("Employee Account Created!");
 
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void acceptOffer() {
+	public static void acceptOfferMenu() {
 		Integer offId;
-		Offer off = null;
-		Item ite = null;
-		BigDecimal weeklyPayment;
-		BigDecimal numWeeklyPayDeci;
 
 		System.out.print("Enter Offer Id to Accept: ");
 		offId = Integer.parseInt(ScannerSingleton.getScanner().nextLine());
 
-		off = OfferDao.getOfferById(offId);
-		numWeeklyPayDeci = new BigDecimal(off.getNumOfWeeklyPayments());
+		EmployeeServices.insertAcceptedOffer(offId);
 
-		weeklyPayment = off.getPrice().divide(numWeeklyPayDeci, 2, RoundingMode.HALF_UP);
-
-		ite = ItemDao.getById(off.getIteId());
-		ite.setOwnerId(off.getCustId());
-		ite.setPrice(off.getPrice());
-		ite.setweeklyPay(weeklyPayment);
-		ite.setRemainingPayments(off.getNumOfWeeklyPayments());
-
-		ItemDao.updateOwner(ite);
-
-		OfferDao.deleteByItemId(ite.getId());
-		
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " Accepted offer id = " + offId + " item id = " + ite.getId() + " customer id = " + ite.getOwnerId() + " offer price = " + off.getPrice());
-
+		System.out.println("Offer Accepted!");
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 	}
 
-	public static void rejectOffer() {
+	public static void rejectOfferMenu() {
 		Integer offId;
 
 		System.out.print("Enter Offer Id to Reject: ");
 		offId = Integer.parseInt(ScannerSingleton.getScanner().nextLine());
 
-		OfferDao.deleteByOfferId(offId);
-		
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " Rejected offer id = " + offId);
+		EmployeeServices.removeOffer(offId);
 
+		System.out.println("Offer Rejected!");
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void viewOffers() {
+	public static void viewOffersMenu() {
 
 		List<Offer> offers = OfferDao.getAll();
 
@@ -332,29 +317,29 @@ public class EmployeeStartMenuBuilder {
 		}
 
 		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " viewed all offers");
-		
+
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void deleteItem() {
+	public static void deleteItemMenu() {
 
 		Integer itemId;
 
 		System.out.print("Enter Item Id to Delete: ");
 		itemId = Integer.parseInt(ScannerSingleton.getScanner().nextLine());
 
-		ItemDao.deleteById(itemId);
+		EmployeeServices.removeItem(itemId);
 
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " deleted item id = " + itemId);
+		System.out.println("Item Removed");
 		
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void editItem() {
+	public static void editItemMenu() {
 
 		String itemName;
 		String itemDescription;
@@ -373,16 +358,16 @@ public class EmployeeStartMenuBuilder {
 		System.out.print("Enter New estimated value: ");
 		itemEstimatedValue = BigDecimal.valueOf(Double.parseDouble(ScannerSingleton.getScanner().nextLine()));
 
-		ItemDao.update(new Item(itemId, itemName, itemDescription, itemEstimatedValue));
+		EmployeeServices.updateItem(new Item(itemId, itemName, itemDescription, itemEstimatedValue));
 
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " edited item id = " + itemId);
+		System.out.println("Item modified!");
 		
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 
 	}
 
-	public static void listAllItems() {
+	public static void listAllItemsMenu() {
 
 		List<Item> items = ItemDao.getAll();
 
@@ -397,12 +382,12 @@ public class EmployeeStartMenuBuilder {
 		}
 
 		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " viewed all items");
-		
+
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();
 	}
 
-	public static void addItem() {
+	public static void addItemMenu() {
 
 		String itemName;
 		String itemDescription;
@@ -417,9 +402,9 @@ public class EmployeeStartMenuBuilder {
 		System.out.print("Enter estimated value: ");
 		itemEstimatedValue = BigDecimal.valueOf(Double.parseDouble(ScannerSingleton.getScanner().nextLine()));
 
-		ItemDao.add(new Item(itemName, itemDescription, itemEstimatedValue));
+		EmployeeServices.addItem(new Item(itemName, itemDescription, itemEstimatedValue));
 
-		LoggerSingelton.getLottger().info(loggedInEmployee.getUserName() + " added item name = " + itemName);
+		System.out.println("Item added!");
 		
 		System.out.println();
 		EmployeeStartMenuBuilder.startMenuEmployeeSelector();

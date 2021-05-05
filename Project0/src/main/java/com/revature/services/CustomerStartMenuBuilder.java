@@ -2,24 +2,27 @@ package com.revature.services;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.LocalDateTime;
 import java.util.List;
-
 import com.revature.daos.ItemDao;
 import com.revature.daos.OfferDao;
-import com.revature.daos.PaymentDao;
 import com.revature.models.Customer;
 import com.revature.models.Item;
 import com.revature.models.Offer;
-import com.revature.models.Payment;
 import com.revature.util.LoggerSingelton;
 import com.revature.util.ScannerSingleton;
 
 public class CustomerStartMenuBuilder {
 
+	// Customer session
 	private static Customer loggedInCustomer;
 
-	// Used to know which customer is currently logged in
+	
+	
+	public static Customer getLoggedInCustomer() {
+		return loggedInCustomer;
+	}
+
+
 	public static void setLoggedInCustomer(Customer cust) {
 		loggedInCustomer = cust;
 	}
@@ -45,19 +48,19 @@ public class CustomerStartMenuBuilder {
 		switch (selection) {
 
 		case 1:
-			CustomerStartMenuBuilder.listItems();
+			CustomerStartMenuBuilder.listItemsMenu();
 			break;
 
 		case 2:
-			CustomerStartMenuBuilder.makeOffer();
+			CustomerStartMenuBuilder.makeOfferMenu();
 			break;
 
 		case 3:
-			CustomerStartMenuBuilder.viewOwnedItems();
+			CustomerStartMenuBuilder.viewOwnedItemsMenu();
 			break;
 
 		case 4:
-			CustomerStartMenuBuilder.makePayment();
+			CustomerStartMenuBuilder.makePaymentMenu();
 			break;
 
 		case 5:
@@ -73,30 +76,22 @@ public class CustomerStartMenuBuilder {
 	}
 
 	
-	public static void makePayment() {
+	public static void makePaymentMenu() {
 		
 		Integer itemId;
-		Item ite;
 		
 		System.out.print("Enter Item Id make a payment for: ");
 		itemId = Integer.parseInt(ScannerSingleton.getScanner().nextLine());
 		
-		ite = ItemDao.getById(itemId);
-		if(ite.getOwnerId() == loggedInCustomer.getId() && ite.getRemainingPayments() > 0) {
-			ite.setRemainingPayments(ite.getRemainingPayments() - 1);
-			ItemDao.updateRemainingPayments(ite);
-			PaymentDao.add(new Payment(LocalDateTime.now(), ite, ite.getweeklyPay()));
-			
-		}
-		
-		LoggerSingelton.getLottger().info(loggedInCustomer.getUserName() + " made a payment for item id = " + itemId + " payed = " + ite.getweeklyPay() + " remaining payments =" + (ite.getRemainingPayments() - 1));
-		
+		CustomerServices.addPayment(itemId);
+
+		System.out.println("Payment Made!");
 		System.out.println();
 		CustomerStartMenuBuilder.startMenu();
 		
 	}
 	
-	public static void listItems() {
+	public static void listItemsMenu() {
 
 		List<Item> items = ItemDao.getAllAvailable();
 
@@ -114,7 +109,7 @@ public class CustomerStartMenuBuilder {
 		CustomerStartMenuBuilder.startMenu();
 	}
 
-	public static void makeOffer() {
+	public static void makeOfferMenu() {
 		Integer id;
 		BigDecimal price;
 		Integer numWeeklyPay;
@@ -134,7 +129,7 @@ public class CustomerStartMenuBuilder {
 		numWeeklyPayDeci = new BigDecimal(numWeeklyPay);
 		System.out.println("Weekly Payments are: " + price.divide(numWeeklyPayDeci, 2, RoundingMode.HALF_UP));
 		
-		System.out.println("Offer Made!\n");
+		System.out.println("Offer Made!");
 		
 		LoggerSingelton.getLottger().info(loggedInCustomer.getUserName() + " made offer for item id = " + id + " at price = " + price);
 		
@@ -142,7 +137,7 @@ public class CustomerStartMenuBuilder {
 		CustomerStartMenuBuilder.startMenu();
 	}
 
-	public static void viewOwnedItems() {
+	public static void viewOwnedItemsMenu() {
 
 		List<Item> items = ItemDao.getOwnedItems(loggedInCustomer.getId());
 
