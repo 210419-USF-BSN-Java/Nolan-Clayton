@@ -1,0 +1,37 @@
+package com.revature.delegates;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jdk8.Jdk8Module;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.revature.daos.ReimbursementDao;
+import com.revature.models.Reimbursement;
+
+public class ManagerViewEmployeeDelegate {
+	
+	private ReimbursementDao rd = new ReimbursementDao();
+	
+	public void getEmployee(HttpServletRequest request, HttpServletResponse response) throws IOException {
+		
+		String path = request.getServletPath();
+		Integer userID = Integer.parseInt(path.substring(21));
+		
+		List<Reimbursement> reimbs = rd.getByUserId(userID);
+		
+		try (PrintWriter pw = response.getWriter()) {
+			ObjectMapper mapper = new ObjectMapper();
+			mapper.registerModule(new Jdk8Module());
+			mapper.registerModule(new JavaTimeModule());
+			
+			pw.write(mapper.writeValueAsString(reimbs));
+		}
+		
+	}
+
+}
